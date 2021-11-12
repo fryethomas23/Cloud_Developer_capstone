@@ -6,8 +6,8 @@ import { cors, httpErrorHandler } from 'middy/middlewares'
 
 import { createAttachmentPresignedUrl } from '../../helpers/todos'
 import { createLogger } from '../../utils/logger'
-// import { updateTodo } from '../../helpers/todos'
-// import { getUserId } from '../utils'
+import { updateTodoAttachmentUrl } from '../../helpers/todos'
+import { getUserId } from '../utils'
 
 const logger = createLogger('generateUploadUrl')
 export const handler = middy(
@@ -17,14 +17,9 @@ export const handler = middy(
     logger.info(`Caller event ${JSON.stringify(event)}`)
     const uploadUrl = await createAttachmentPresignedUrl(todoId)
     
-    // const userId = getUserId(event)
-    // const todoItem = {
-    //   "name": todoItem.name,
-    //   "dueDate": todoItem.dueDate,
-    //   "done": todoItem.done
-    // }
-    // updateTodo(userId, todoId, todoItem)
-    console.log(uploadUrl)
+    const userId = getUserId(event)
+    updateTodoAttachmentUrl(userId, todoId)
+
     return {
       statusCode: 201,
       body: JSON.stringify({

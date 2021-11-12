@@ -83,12 +83,14 @@ export class TodosAccess {
                 "userId": userId,
                 "todoId": todoId
             },
+            UpdateExpression: "set name=:name, dueDate=:dueDate, done:=done",
             ExpressionAttributeValues: {
-                "name": todoItem.name,
-                "dueDate": todoItem.dueDate,
-                "done": todoItem.done
+                ":name": todoItem.name,
+                ":dueDate": todoItem.dueDate,
+                ":done": todoItem.done
             }
         }).promise()
+        logger.info(`Todo ${todoId} successful updated for ${userId} with ${todoItem}`)
         return
     }
 
@@ -104,6 +106,27 @@ export class TodosAccess {
         } catch(e) {
             logger.error(`todo ${todoId} deletion failed. ${e}`)
         }
+        logger.info(`Todo ${todoId} deletion successful for ${userId}`)
+        return
+    }
+
+    async UpdateTodoAttachmentUrl(userId:string, todoId:string, attachmentUrl: string) {
+        try{
+            await this.docClient.update({
+                TableName: this.todosTable,
+                Key: {
+                    "userId": userId,
+                    "todoId": todoId
+                },
+                UpdateExpression: "set attchmentUrl=:attachmentUrl",
+                ExpressionAttributeValues: {
+                    ":attachmentUrl": attachmentUrl
+                }
+            }).promise()
+        } catch (e) {
+            logger.error(`Unable to update todo ${todoId} for user ${userId} with attachmentUrl ${attachmentUrl}. ${e}`)
+        }
+        logger.info(`Todo ${todoId} update successful for ${userId} with attachment url ${attachmentUrl}`)
         return
     }
 }
