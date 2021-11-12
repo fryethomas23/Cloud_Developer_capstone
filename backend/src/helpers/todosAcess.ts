@@ -118,7 +118,7 @@ export class TodosAccess {
                     "userId": userId,
                     "todoId": todoId
                 },
-                UpdateExpression: "set attchmentUrl=:attachmentUrl",
+                UpdateExpression: "set attachmentUrl=:attachmentUrl",
                 ExpressionAttributeValues: {
                     ":attachmentUrl": attachmentUrl
                 }
