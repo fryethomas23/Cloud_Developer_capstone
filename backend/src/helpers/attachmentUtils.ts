@@ -4,18 +4,39 @@ import { createLogger } from '../utils/logger'
 
 const XAWS = AWSXRay.captureAWS(AWS)
 // TODO: Implement the fileStogare logic
-const s3 = new XAWS.S3({
-    signatureVersion: 'v4'
-})
-const bucketName = process.env.TODOS_S3_BUCKET
-const urlExpiration = process.env.SIGNED_URL_EXPIRATION
 const logger = createLogger("attachmentUtils")
 
-export async function AttachmentUtils(timestamp: string) {
-    logger.info('Generating presigned URL for attachment upload')
-    return s3.getSignedUrl('putObject', {
-        Bucket: bucketName,
-        Key: timestamp,
-        Expires: urlExpiration
-    })
+export class AttachmentUtils {
+    constructor(
+        private readonly s3 = new XAWS.S3({
+            signatureVersion: 'v4'
+        }),
+        private readonly bucketName = process.env.ATTACHMENT_S3_BUCKET,
+        private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION,
+        
+    ) {}
+
+    async getUploadUrl(todoId: string) {
+        try {
+            const uploadUrl = this.s3.getSignedUrl('putObject', {
+            Bucket: this.bucketName,
+            Key: todoId,
+            Expires: Number(this.urlExpiration)
+            })
+            logger.info(`Upload URL generated. ${uploadUrl}`)
+            return uploadUrl
+        } catch (e) {
+            logger.info(`Upload URL failed to generated. ${e}`)
+            return ""
+        }
+    }
+
+    getAttachmentUrl(attachmentId: string): string {
+        return `https://${this.bucketName}.s3.amazonaws.com/${attachmentId}`
+    }    
+
+
+
 }
+
+

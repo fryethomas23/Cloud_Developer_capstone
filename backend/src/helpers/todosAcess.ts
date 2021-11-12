@@ -17,11 +17,11 @@ export class TodosAccess {
     
     constructor(
         private readonly docClient: DocumentClient = createDynamoDBClient(),
-        private readonly todosTable = process.env.TODOS_TABLE,
+        private readonly todosTable = process.env.TODOS_TABLE
     ){}
     
     async getTodos(userId: String): Promise<TodoItem[]> {
-        logger.info("Getting all User todos")
+        
         const result = await this.docClient.query({
             TableName: this.todosTable,
             KeyConditionExpression: 'userId= :userId',
@@ -29,6 +29,7 @@ export class TodosAccess {
                 ':userId': userId
             }
         }).promise()
+        logger.info(`${userId} todos ${JSON.stringify(result.Items)}`)
         return result.Items as TodoItem[]
     }
 
@@ -39,48 +40,39 @@ export class TodosAccess {
         todoId: string,
         uploadUrl: string = ""
     ): Promise <TodoItem> {
-        logger.info("Creating todo")
-        if (uploadUrl) {
-            await this.docClient.put({
-                TableName: this.todosTable,
-                Item: {
-                    "userId": userId,
-                    "todoId": todoId,
-                    "createdAt": timestamp,
-                    "name": todoItem.name,
-                    "dueDate": todoItem.dueDate,
-                    "done": false,
-                    "attachmentUrl": uploadUrl
-                }
-            }).promise()
-        } else {
-            await this.docClient.put({
-                TableName: this.todosTable,
-                Item: {
-                    "userId": userId,
-                    "todoId": todoId,
-                    "createdAt": timestamp,
-                    "name": todoItem.name,
-                    "dueDate": todoItem.dueDate,
-                    "done": false
-                }
-            }).promise()
+        const newTodo = {
+            todoId: todoId,
+            userId: userId,
+            done: false,
+            attachmentUrl: uploadUrl,
+            createdAt: timestamp,
+            name: todoItem.name,
+            dueDate: todoItem.dueDate
         }
-
-        logger.info("Getting created todo")
-        const result = await this.docClient.get({
-            TableName: this.todosTable,
-            Key: {
-                "userId": {
-                    "S": userId
-                },
-                "createdAt": {
-                    "S": timestamp
-                }
-            },
-            ConsistentRead: true
-        }).promise()
-        return result.Item as TodoItem
+        try {
+            if (uploadUrl) {
+                await this.docClient.put({
+                    TableName: this.todosTable,
+                    Item: newTodo
+                }).promise()
+            } else {
+                await this.docClient.put({
+                    TableName: this.todosTable,
+                    Item: {
+                        "userId": userId,
+                        "todoId": todoId,
+                        "createdAt": timestamp,
+                        "name": todoItem.name,
+                        "dueDate": todoItem.dueDate,
+                        "done": false
+                    }
+                }).promise()
+            }
+        } catch (e) {
+            logger.error(`todo ${todoId} creation failed. ${e}`)
+        }
+        logger.info(`Todo ${JSON.stringify(newTodo)} creation successful for ${userId}`)
+        return newTodo
     }
 
     async UpdateTodo(userId:string, todoId:string, todoItem: TodoUpdate) {
@@ -88,41 +80,30 @@ export class TodosAccess {
         await this.docClient.update({
             TableName: this.todosTable,
             Key: {
-                "userId": {
-                    "S": userId
-                },
-                "todoId": {
-                    "S": todoId
-                }
+                "userId": userId,
+                "todoId": todoId
             },
             ExpressionAttributeValues: {
-                "name": {
-                    "S": todoItem.name
-                },
-                "dueDate": {
-                    "S": todoItem.dueDate
-                },
-                "done":{
-                    "BOOL": todoItem.done
-                }
+                "name": todoItem.name,
+                "dueDate": todoItem.dueDate,
+                "done": todoItem.done
             }
         }).promise()
         return
     }
 
     async DeleteTodo(userId:string, todoId:string) {
-        logger.info("Deleting todo")
-        await this.docClient.delete({
-            TableName: this.todosTable,
-            Key: {
-                "userId": {
-                    "S": userId
-                },
-                "todoId": {
-                    "S": todoId
+        try {
+            await this.docClient.delete({
+                TableName: this.todosTable,
+                Key: {
+                    "userId": userId,
+                    "todoId": todoId
                 }
-            }
-        }).promise()
+            }).promise()
+        } catch(e) {
+            logger.error(`todo ${todoId} deletion failed. ${e}`)
+        }
         return
     }
 }

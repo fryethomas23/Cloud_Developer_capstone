@@ -4,12 +4,12 @@ import 'source-map-support/register'
 //import { verify, decode } from 'jsonwebtoken'
 import { verify } from 'jsonwebtoken'
 import { createLogger } from '../../utils/logger'
-//import Axios from 'axios'
+import Axios from 'axios'
 //import { Jwt } from '../../auth/Jwt'
 import { JwtPayload } from '../../auth/JwtPayload'
-import { parseUserId } from '../../auth/utils'
+//import { parseUserId } from '../../auth/utils'
 //import request from 'request'
-const request = require('request')
+//const request = require('request')
 //import { request } from 'http'
 
 const logger = createLogger('auth')
@@ -17,7 +17,7 @@ const logger = createLogger('auth')
 // TODO: Provide a URL that can be used to download a certificate that can be used
 // to verify JWT token signature.
 // To get this URL you need to go to an Auth0 page -> Show Advanced Settings -> Endpoints -> JSON Web Key Set
-const jwksUrl = 'https://fsnd-thomas.us.auth0.com/.well-known/jwks.json'
+const jwksUrl = process.env.AUTH_0_JSON_WEB_KEY_SET_URL
 
 export const handler = async (
   event: CustomAuthorizerEvent
@@ -67,29 +67,8 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   // You should implement it similarly to how it was implemented for the exercise for the lesson 5
   // You can read more about how to do this here: https://auth0.com/blog/navigating-rs256-and-jwks/
 
-  let keys = await request({uri: jwksUrl, strictSsl: true, json: true}, (err, res) => {
-    if (err || res.statusCode < 200 || res.statusCode >= 300) {
-      if (res) {
-        return new Error(res.body && (res.body.message || res.body) || res.statusMessage || `Http Error ${res.statusCode}`);
-      }
-      return err;
-    }
-    return res.body.keys
-  })
-
-  const signingKeys = keys
-        .filter(key => key.use === 'sig' // JWK property `use` determines the JWK is for signature verification
-                    && key.kty === 'RSA' // We are only supporting RSA (RS256)
-                    && key.kid           // The `kid` must be present to be useful for later
-                    && ((key.x5c && key.x5c.length) || (key.n && key.e)) // Has useful public keys
-        ).map(key => {
-          return { kid: key.kid, nbf: key.nbf, publicKey: certToPEM(key.x5c[0]) };
-        });
-        
-  logger.info("User was authorized" , {
-    userId: parseUserId(token)
-  })
-  return verify(token, signingKeys.publicKey, { algorithms: ['RS256'] }) as JwtPayload
+  const certificate = await getCertificatie(jwksUrl)
+  return verify(token, certificate, { algorithms: ['RS256'] }) as JwtPayload
   // return jwt as JwtPayload 
 }
 
@@ -105,8 +84,14 @@ function getToken(authHeader: string): string {
   return token
 }
 
-function certToPEM(cert) {
-  cert = cert.match(/.{1,64}/g).join('\n');
-  cert = `-----BEGIN CERTIFICATE-----\n${cert}\n-----END CERTIFICATE-----\n`;
-  return cert;
+async function getCertificatie(jwksUrl: string) {
+  try{
+    const response = await Axios.get(jwksUrl);
+    const key = response['data']['keys'][0]['x5c'][0];
+    const cert = `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----`;
+    return cert
+  }
+  catch (error){
+    logger.error('Getting certificate failed',error)
+   }
 }
