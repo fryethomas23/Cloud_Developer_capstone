@@ -2,24 +2,37 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
-import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
+import { CreatePostRequest } from '../../requests/CreatePostRequest'
 import { getUserId } from '../utils';
-import { createTodo } from '../../helpers/todos'
+import { createPost } from '../../helpers/posts'
 import { createLogger } from '../../utils/logger'
 
-const logger = createLogger('createTodos')
+const logger = createLogger('createPosts')
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const newTodo: CreateTodoRequest = JSON.parse(event.body)
-    // TODO: Implement creating a new TODO item
     logger.info(`Caller event ${JSON.stringify(event)}`)
+    const newPost: CreatePostRequest = JSON.parse(event.body)
+    let topic: string
+    try {
+      topic = event.queryStringParameters.topic
+    } catch (e) {
+      logger.info(`${e}. continuing with default topic`)
+      topic = "CurrentEvents"
+    }
     const userId = getUserId(event)
-    const todo = await createTodo(userId, newTodo) 
+    if (!(userId)) {
+      logger.error(`User Id required.`)
+      return {
+        statusCode: 403,
+        body: JSON.stringify({})
+      }
+    }
+    const post = await createPost(userId, topic, newPost) 
     return {
       statusCode: 201,
       body: JSON.stringify({
-        item: todo
+        item: post
       })
     }
 })

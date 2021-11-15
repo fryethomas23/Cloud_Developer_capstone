@@ -1,0 +1,596 @@
+{
+	"info": {
+		"_postman_id": "2c43e2d7-4d2e-4982-9451-acde8b5179e9",
+		"name": "Udacity C4 Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POSTs authorized",
+			"item": [
+				{
+					"name": "Get all topic posts",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"post\": \"Get some\"\n}"
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update post",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"post\": \"GET SOME: Go Everytime So Others May ... Everytime\"\n}"
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts/{{postId}}?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts",
+								"{{postId}}"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get upload URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts/{{postId}}/attachment?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts",
+								"{{postId}}",
+								"attachment"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload attachment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "/C:/Users/User/Documents/Coding/Udacity/Cloud_Developer/Courses/course-02/exercises/udacity-c2-restapi/mock/xander0.jpg"
+							}
+						},
+						"url": {
+							"raw": "{{uploadUrl}}",
+							"host": [
+								"{{uploadUrl}}"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete post",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts/{{postId}}?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts",
+								"{{postId}}"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "POSTs unauthorized",
+			"item": [
+				{
+					"name": "Create post",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"post\": \"Get some\"\n}"
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update post",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"post\": \"GET SOME: Go Everytime So Others May ... Everytime\"\n}"
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts/{{postId}}?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts",
+								"{{postId}}"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get upload URL",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts/{{postId}}/attachment?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts",
+								"{{postId}}",
+								"attachment"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete post",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/posts/{{postId}}?topic=soccer",
+							"protocol": "https",
+							"host": [
+								"{{apiId}}",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"dev",
+								"posts",
+								"{{postId}}"
+							],
+							"query": [
+								{
+									"key": "topic",
+									"value": "soccer"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "tokenType",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "http://localhost:3000/callback",
+				"type": "string"
+			},
+			{
+				"key": "useBrowser",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "tokenName",
+				"value": "Discussion board",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://fsnd-thomas.us.auth0.com/oauth/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://fsnd-thomas.us.auth0.com/authorize",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "_ziYshXA65cIoEcbap6XJTDqZCH2udNJZQ4J2rbq6pLRngxrVFGq2G1mqKnyYemf",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "QqFRYW73NaATC2niA1BrjFIaeJz0W6pr",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiId",
+			"value": "gs2b66zqe4"
+		},
+		{
+			"key": "authToken",
+			"value": "UXFGUllXNzNOYUFUQzJuaUExQnJqRklhZUp6MFc2cHI6X3ppWXNoWEE2NWNJb0VjYmFwNlhKVERxWkNIMnVkTkpaUTRKMnJicTZwTFJuZ3hyVkZHcTJHMW1xS255WWVtZg=="
+		},
+		{
+			"key": "postId",
+			"value": "3049c92c-01b6-445a-901b-1ff0fa7cd08a"
+		},
+		{
+			"key": "uploadUrl",
+			"value": "https://serverless-c4-post-images-dev-dev.s3.amazonaws.com/3049c92c-01b6-445a-901b-1ff0fa7cd08a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAYKILVGMYWKV4UKSV%2F20211115%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211115T215216Z&X-Amz-Expires=300&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDpz3ntJzpDadDkXoyGBFmU1310q386obbJ0rI02t7qtQIhAICZDbYjpvBKRliq94OZ5V6h%2FmFoLL%2F8amuSq7OEwtRXKq4CCH8QABoMNTcxNzkxOTc5MzEzIgxt1SjFLqQXHhaRaZUqiwKDzj5jkTvb5gDTTrdDLSlnfM815JOFK6dtCdezUtPrhFDtl41TYoGpb1EAM49hfWJCxQmzvAxVdcLeJRCPwp4xkBOcWgXKnCzkQVVeqlkzvZDrkGdFOLBM7xw9DBugrnkAuAEiGZs1ugI83F5k%2FDPgtDvYx7nEp7HhEncWx6DayDuOHDTC%2BO2laLhdSo4FQPbhewYKnczFDg04Cq%2F%2Byydz%2FlgI53hLWryWojT%2FL2EzlSw5XSv60tS9MWwXyVCVCJ0msGmJEjlYvS2EiNVqasNo4%2Be5tgpYy8oFOL1ff3U2FRoTgk2zmz4qw%2FXscQ7r7ksok1vwX7SFdzVSFMl6X01O3QymudvlhhU%2FmSEwj63LjAY6mQFabaAVCfrFOUAxX6ibn72RU1xJRtVw3ZSK8IfNri5C4uNXIs7VNN8OnER2MEIpazkum%2BdPmjcyMb4P8HP7zGBhONYRjiHZ3aWHT5LHVIl85vowUCw4M8QtdG0BJWoi1LxB7VTrO3ZJsCeaMHr4kTyocmug2KvHl3HtdqhUEk8CCYS1mApNRbJOZoooua3pQZTeQUKCAHzT70c%3D&X-Amz-Signature=aa912e52487510eeefa194d32638e7e82317b506cff3e691a93c30895b23567c&X-Amz-SignedHeaders=host"
+		}
+	]
+}

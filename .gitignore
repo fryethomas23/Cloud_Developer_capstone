@@ -12,3 +12,5 @@ jspm_packages
 
 # Local DynamoDb
 .dynamodb
+
+client/

@@ -4,21 +4,29 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { updateTodo } from '../../helpers/todos'
-import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
+import { updatePost } from '../../helpers/posts'
+import { UpdatePostRequest } from '../../requests/UpdatePostRequest'
 import { getUserId } from '../utils'
 import { createLogger } from '../../utils/logger'
 
-const logger = createLogger('updateTodos')
+const logger = createLogger('updatePosts')
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId
-    const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
-    // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
+    const postId = event.pathParameters.postId
+    const topic = event.queryStringParameters.topic
+    const updatedPost: UpdatePostRequest = JSON.parse(event.body)
+
     logger.info(`Caller event ${JSON.stringify(event)}`)
     const userId = getUserId(event)
-    await updateTodo(userId, todoId, updatedTodo)
+    if (!(userId)) {
+      logger.error(`User Id required.`)
+      return {
+        statusCode: 403,
+        body: JSON.stringify({})
+      }
+    }
+    await updatePost(userId, postId, topic, updatedPost)
 
     return {
       statusCode: 201,

@@ -3,20 +3,13 @@
   "title": "group",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string"
-    },
-    "dueDate": {
-      "type": "string"
-    },
-    "done": {
-      "type": "boolean"
+    "post": {
+      "type": "string",
+      "pattern": "^(?!\\s*$).+"
     }
   },
   "required": [
-    "name",
-    "dueDate",
-    "done"
+    "post"
   ],
   "additionalProperties": false
 }

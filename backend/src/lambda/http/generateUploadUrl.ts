@@ -4,21 +4,28 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { createAttachmentPresignedUrl } from '../../helpers/todos'
+import { createAttachmentPresignedUrl } from '../../helpers/posts'
 import { createLogger } from '../../utils/logger'
-import { updateTodoAttachmentUrl } from '../../helpers/todos'
+import { updatePostAttachmentUrl } from '../../helpers/posts'
 import { getUserId } from '../utils'
 
 const logger = createLogger('generateUploadUrl')
+
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId
-    // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
+    const postId = event.pathParameters.postId
+    const topic = event.queryStringParameters.topic
     logger.info(`Caller event ${JSON.stringify(event)}`)
-    const uploadUrl = await createAttachmentPresignedUrl(todoId)
-    
     const userId = getUserId(event)
-    updateTodoAttachmentUrl(userId, todoId)
+    if (!(userId)) {
+      logger.error(`User Id required.`)
+      return {
+        statusCode: 403,
+        body: JSON.stringify({})
+      }
+    }
+    const uploadUrl = await createAttachmentPresignedUrl(postId)
+    updatePostAttachmentUrl(userId, postId, topic)
 
     return {
       statusCode: 201,

@@ -3,18 +3,13 @@
   "title": "group",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string",
-      "pattern": "^(?!\\s*$).+"
-    },
-    "dueDate": {
+    "post": {
       "type": "string",
       "pattern": "^(?!\\s*$).+"
     }
   },
   "required": [
-    "name",
-    "dueDate"
+    "post"
   ],
   "additionalProperties": false
 }
